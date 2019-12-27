@@ -8,9 +8,14 @@ namespace AristotleHoneyComb
     {
         static void Main(string[] args)
         {
-            int[] numbers = Enumerable.Range(1, 19).ToArray();
-
-            HoneyComb honeyComb = new HoneyComb();
+            HoneyComb honeyComb = new HoneyComb()
+                .Fill(
+                    Enumerable.Range(1, 3).ToArray(),
+                    Enumerable.Range(4, 4).ToArray(),
+                    Enumerable.Range(8, 5).ToArray(),
+                    Enumerable.Range(13, 4).ToArray(),
+                    Enumerable.Range(17, 3).ToArray()
+                );
 
             Console.WriteLine(honeyComb.Print());
 
@@ -30,6 +35,19 @@ namespace AristotleHoneyComb
             Rows[2] = new int[5];
             Rows[3] = new int[4];
             Rows[4] = new int[3];
+        }
+
+        public HoneyComb Fill(params int[][] values)
+        {
+            for (int rowIndex = 0; rowIndex < Math.Min(values.Length, Rows.Length); rowIndex++)
+            {
+                for (int i = 0; i < Math.Min(values[rowIndex].Length, Rows[rowIndex].Length); i++)
+                {
+                    Rows[rowIndex][i] = values[rowIndex][i];
+                }
+            }
+
+            return this;
         }
 
         public string Print()
