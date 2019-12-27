@@ -8,16 +8,9 @@ namespace AristotleHoneyComb
     {
         static void Main(string[] args)
         {
-            HoneyComb honeyComb = new HoneyComb()
-                .Fill(
-                    Enumerable.Range(1, 3).ToArray(),
-                    Enumerable.Range(4, 4).ToArray(),
-                    Enumerable.Range(8, 5).ToArray(),
-                    Enumerable.Range(13, 4).ToArray(),
-                    Enumerable.Range(17, 3).ToArray()
-                );
+            HoneyCombSolver honeyCombSolver = new HoneyCombSolver().Solve();
 
-            Console.WriteLine(honeyComb.Print());
+            Console.WriteLine(honeyCombSolver);
 
             Console.WriteLine($"Done @ {DateTime.Now}");
             Console.ReadLine();
@@ -50,6 +43,21 @@ namespace AristotleHoneyComb
             return this;
         }
 
+        public HoneyComb Rotate()
+        {
+
+            return new HoneyComb()
+                .Fill(
+                    new int[] { Rows[2][0], Rows[1][0], Rows[0][0] }
+                    , new int[] { Rows[3][0], Rows[2][1], Rows[1][1], Rows[0][1] }
+                    , new int[] { Rows[4][0], Rows[3][1], Rows[2][2], Rows[1][2], Rows[0][2] }
+                    , new int[] { Rows[4][1], Rows[3][2], Rows[2][3], Rows[1][3] }
+                    , new int[] { Rows[4][2], Rows[3][3], Rows[2][4] }
+                );
+        }
+
+        public int[] RowSums() => Rows.Select(x => x.Sum()).ToArray();
+
         public string Print()
         {
             StringBuilder printer = new StringBuilder();
@@ -73,6 +81,42 @@ namespace AristotleHoneyComb
             }
 
             return printer.ToString();
+        }
+    }
+
+    class HoneyCombSolver
+    {
+        private readonly HoneyComb honeyComb;
+
+        public HoneyCombSolver()
+        {
+            honeyComb = new HoneyComb()
+                .Fill(
+                    Enumerable.Range(1, 3).ToArray(),
+                    Enumerable.Range(4, 4).ToArray(),
+                    Enumerable.Range(8, 5).ToArray(),
+                    Enumerable.Range(13, 4).ToArray(),
+                    Enumerable.Range(17, 3).ToArray()
+                );
+        }
+
+        public override string ToString()
+        {
+            return honeyComb.Print();
+        }
+
+        public HoneyCombSolver Solve()
+        {
+            return this;   
+        }
+
+        private bool IsSolved()
+        {
+            return
+                honeyComb.RowSums().All(x => x == 38)
+                && honeyComb.Rotate().RowSums().All(x => x == 38)
+                && honeyComb.Rotate().Rotate().RowSums().All(x => x == 38)
+                ;
         }
     }
 }
