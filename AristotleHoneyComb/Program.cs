@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,8 @@ namespace AristotleHoneyComb
         static void Main(string[] args)
         {
             HoneyCombSolver honeyCombSolver = new HoneyCombSolver().Solve();
+
+            File.WriteAllText(@"C:\Users\hinte\Downloads\honeycomb_solution.txt", honeyCombSolver.ToString());
 
             Console.WriteLine(honeyCombSolver);
 
@@ -248,6 +251,16 @@ namespace AristotleHoneyComb
             }
 
             return result.ToArray();
+        }
+
+        private int CountEvens(params int[] values)
+        {
+            return values.Count(x => x % 2 == 0);
+        }
+
+        private int CountOdds(params int[] values)
+        {
+            return values.Count(x => x % 2 != 0);
         }
     }
 }
