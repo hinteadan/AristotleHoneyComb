@@ -130,6 +130,8 @@ namespace AristotleHoneyComb
 
                             foreach(int[] groupOfFive in possibleGroupsOfFives)
                             {
+                                Console.WriteLine($"{possibleGroupsOfThreeA.Length} x {possibleGroupsOfThreeB.Length} x {possibleGroupsOfFoursA.Length} x {possibleGroupsOfFoursB.Length} x {possibleGroupsOfFives.Length}");
+
                                 honeyComb.Fill(
                                     groupOfThreeA,
                                     groupOfFourA,
@@ -137,6 +139,7 @@ namespace AristotleHoneyComb
                                     groupOfFourB,
                                     groupOfThreeB
                                 );
+
                                 if (IsSolved())
                                     return this;
                             }
