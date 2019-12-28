@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
@@ -86,6 +87,8 @@ namespace AristotleHoneyComb
 
     class HoneyCombSolver
     {
+        static readonly int[] numberPool = Enumerable.Range(1, 19).ToArray();
+
         private readonly HoneyComb honeyComb;
 
         public HoneyCombSolver()
@@ -107,7 +110,43 @@ namespace AristotleHoneyComb
 
         public HoneyCombSolver Solve()
         {
-            return this;   
+            int[][] possibleGroupsOfThreeA = CalculatePossibleGroupsOfThree(numberPool);
+
+            foreach (int[] groupOfThreeA in possibleGroupsOfThreeA)
+            {
+                int[][] possibleGroupsOfThreeB = CalculatePossibleGroupsOfThree(numberPool.Except(groupOfThreeA));
+
+                foreach (int[] groupOfThreeB in possibleGroupsOfThreeB)
+                {
+                    int[][] possibleGroupsOfFoursA = CalculatePossibleGroupsOfFour(numberPool.Except(groupOfThreeA.Concat(groupOfThreeB)));
+
+                    foreach(int[] groupOfFourA in possibleGroupsOfFoursA)
+                    {
+                        int[][] possibleGroupsOfFoursB = CalculatePossibleGroupsOfFour(numberPool.Except(groupOfThreeA.Concat(groupOfThreeB).Concat(groupOfFourA)));
+
+                        foreach(int[] groupOfFourB in possibleGroupsOfFoursB)
+                        {
+                            int[][] possibleGroupsOfFives = CalculatePossibleGroupsOfFive(numberPool.Except(groupOfThreeA.Concat(groupOfThreeB).Concat(groupOfFourA).Concat(groupOfFourB)));
+
+                            foreach(int[] groupOfFive in possibleGroupsOfFives)
+                            {
+                                honeyComb.Fill(
+                                    groupOfThreeA,
+                                    groupOfFourA,
+                                    groupOfFive,
+                                    groupOfFourB,
+                                    groupOfThreeB
+                                );
+                                if (IsSolved())
+                                    return this;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            return this;
         }
 
         private bool IsSolved()
@@ -117,6 +156,95 @@ namespace AristotleHoneyComb
                 && honeyComb.Rotate().RowSums().All(x => x == 38)
                 && honeyComb.Rotate().Rotate().RowSums().All(x => x == 38)
                 ;
+        }
+
+        private int[][] CalculatePossibleGroupsOfThree(IEnumerable<int> numberPool)
+        {
+            List<int[]> result = new List<int[]>();
+
+            foreach (int a in numberPool)
+            {
+                foreach (int b in numberPool)
+                {
+                    if (b == a) continue;
+
+                    foreach (int c in numberPool)
+                    {
+                        if (c == a || c == b) continue;
+                        if (a + b + c != 38) continue;
+
+                        result.Add(new int[] { a, b, c });
+                    }
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        private int[][] CalculatePossibleGroupsOfFour(IEnumerable<int> numberPool)
+        {
+            List<int[]> result = new List<int[]>();
+
+            foreach (int a in numberPool)
+            {
+                foreach (int b in numberPool)
+                {
+                    if (b == a) continue;
+
+                    foreach (int c in numberPool)
+                    {
+                        if (c == a || c == b) continue;
+
+                        foreach (int d in numberPool)
+                        {
+                            if (d == a || d == b || d == c) continue;
+
+                            if (a + b + c + d != 38) continue;
+
+                            result.Add(new int[] { a, b, c, d });
+
+                        }
+
+                    }
+                }
+            }
+
+            return result.ToArray();
+        }
+
+        private int[][] CalculatePossibleGroupsOfFive(IEnumerable<int> numberPool)
+        {
+            List<int[]> result = new List<int[]>();
+
+            foreach (int a in numberPool)
+            {
+                foreach (int b in numberPool)
+                {
+                    if (b == a) continue;
+
+                    foreach (int c in numberPool)
+                    {
+                        if (c == a || c == b) continue;
+
+                        foreach (int d in numberPool)
+                        {
+                            if (d == a || d == b || d == c) continue;
+
+                            foreach (int e in numberPool)
+                            {
+                                if (e == a || e == b || e == c || e == d) continue;
+
+                                if (a + b + c + d + e != 38) continue;
+
+                                result.Add(new int[] { a, b, c, d, e });
+                            }
+                        }
+
+                    }
+                }
+            }
+
+            return result.ToArray();
         }
     }
 }
